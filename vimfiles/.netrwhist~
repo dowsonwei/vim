@@ -1,0 +1,9 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =7
+let g:netrw_dirhist_1='e:/Meeting/MeetingManagerSystem'
+let g:netrw_dirhist_2='e:/Meeting/MeetingManagerSystem/WebContent'
+let g:netrw_dirhist_3='e:/java最唗/ApplicantSSH'
+let g:netrw_dirhist_4='e:/java最唗/ApplicantSSH/src'
+let g:netrw_dirhist_5='e:/java最唗/ApplicantSSH/src/com/etc/action'
+let g:netrw_dirhist_6='E:/java最唗/厙珜'
+let g:netrw_dirhist_7='e:/java最唗'

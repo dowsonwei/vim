@@ -1,0 +1,163 @@
+set nocompatible
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+endfunction
+
+set rtp+=$VIM/vimfiles/bundle/vundle/
+call vundle#rc('$VIM/vimfiles/bundle/')
+Bundle 'gmarik/vundle'
+Bundle 'FixCSS.vim'
+Bundle 'Yggdroot/indentLine'        
+Bundle 'Lokaltog/vim-powerline'
+filetype plugin indent on       " automatically detect file types.
+"字典的路径
+au FileType html call AddhtmlFuncList()
+au FileType javascript call AddJSFuncList()
+au FileType css call AddcssFuncList()
+function AddhtmlFuncList()
+    set dictionary-=$VIM/ExtraVim/html.txt dictionary+=$VIM/ExtraVim/html.txt
+    set complete-=k complete+=k
+endfunction
+function AddJSFuncList()
+    set dictionary-=$VIM/ExtraVim/javascript.txt dictionary+=$VIM/ExtraVim/javascript.txt
+    set complete-=k complete+=k
+endfunction
+function AddcssFuncList()
+    set dictionary-=$VIM/ExtraVim/css.txt dictionary+=$VIM/ExtraVim/css.txt
+    set complete-=k complete+=k
+endfunction
+
+"插件配置
+" 用于显示对齐线，与 indent_guides 在显示方式上不同，根据自己喜好选择了
+" 在终端上会有屏幕刷新的问题，这个问题能解决有更好了
+" 开启/关闭对齐线
+nmap <leader>il :IndentLinesToggle<CR>
+" 设置Gvim的对齐线样式
+" 设置终端对齐线颜色，如果不喜欢可以将其注释掉采用默认颜色
+let g:indentLine_color_term = 239
+" 设置 GUI 对齐线颜色，如果不喜欢可以将其注释掉采用默认颜色
+" let g:indentLine_color_gui = '#A4E57E'
+
+winpos 220 10 " 设置初始窗口的坐标位置，相对于左上角的像素{x} {y}
+set clipboard+=unnamed   "与windows共享剪贴板
+"set lines=29 columns=140 "设置行数列数
+au GUIEnter * simalt ~x         "窗口启动时自动最大化
+"set textwidth=135
+set wrapmargin=2   
+set formatoptions+=mM   "设置了长句多少字自动换行
+set wrap  "nowrap是不自动折行  
+set guifont=Consolas:h13:cANSI "设置英文字体
+set autowrite   "一有修改自动保存
+set linespace=0 "字符间距
+set ruler " 打开状态栏标尺
+set magic " 打开魔术
+"set scrolloff=3 " 光标移动到顶部/底部时保持3行距离
+"set cursorline  "开启光亮光标行
+set nu
+color desert
+set ls=2
+set showcmd
+set autoindent
+set paste
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set expandtab		"expandtab选项，用来控制是否将Tab转换为空格
+set encoding=utf-8
+set langmenu=zh_CN.utf-8
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8              "识别各种语言
+language messages zh_CN.utf-8       "处理consle输出乱码
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim          "处理菜单及右键菜单乱码      
+let Tlist_Ctags_Cmd = 'E:\software\vim\vim\ctags58\ctags.exe'
+let g:winManagerWindowLayout = "TagList|FileExplorer"
+nmap wm :WMToggle<cr>
+nmap <silent> <F8> :WMToggle<cr>	"左边的目录文档
+" 用来打开list功能，显示不可见字符
+"set list
+" 设置为>-格式,用$结尾
+"set listchars=tab:\|\
+"窗口切换
+nnoremap <C-h> <C-W>h
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-l> <C-W>l
+"在编辑模式的上下移动
+noremap <c-j> <c-e> 	"使ctrl j变成ctrl e，可以向下滑动
+noremap <c-k> <c-y>	"使ctrl k变成ctrl y，可以向上滑动
+noremap <Down> <c-e> 	"使ctrl j变成ctrl e，可以向下滑动
+noremap <Up> <c-y>	"使ctrl k变成ctrl y，可以向上滑动
+"set cmdheight=2         "设置命令行的高度为2，默认为1
+set shortmess=atI       "去掉欢迎界面
+"set foldenable     	"启用折叠
+"set foldmethod=indent     "indent 折叠方式
+" 用空格键来开关折叠
+"nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+"变换工具栏的显示与否
+set guioptions-=m
+set guioptions-=T
+map <silent> <F2> :if &guioptions =~# 'T' <Bar>
+\set guioptions-=T <Bar>
+        \set guioptions-=m <bar>
+    \else <Bar>
+        \set guioptions+=T <Bar>
+        \set guioptions+=m <Bar>
+    \endif<CR>
+" 插入模式的光标上下左右移动
+imap <c-k> <Up>
+imap <c-j> <Down>
+imap <c-h> <Left>
+imap <c-l> <Right>
+"符号匹配
+inoremap ( ()<ESC>i
+inoremap [ []<ESC>i
+inoremap { {}<ESC>i
+inoremap < <><ESC>i
+inoremap " ""<ESC>i
+" F9 一键保存并运行
+nmap <F9> :w<CR>
+imap <F9> <ESC>:w<CR>
+"alt + l或者h切换不同tab界面和添加tab界面
+nmap <a-h> :tabp<CR>
+nmap <a-l> :tabn<CR>
+nmap <a-n> :tabnew<CR>
+"查看所有的标记
+nmap <a-m> :marks<CR>
+imap <a-m> <ESC>:marks<CR>
+"折叠函数
+nmap <a-j> $zf%
+"nmap <a-j> 0%$zf%
+"开启快选择模式
+nmap <a-r> <s-v><c-q>
+"替换单词，选中要替换的词，然后从a寄存器中粘贴单词出来
+nmap <a-y> "ayw
+nmap <a-p> ve"ap
+nmap <a-b> "b
+"关闭当前标签
+nmap <a-q> :q<CR>
